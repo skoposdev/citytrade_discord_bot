@@ -11,11 +11,11 @@ func UserInfo(s *discordgo.Session, i *discordgo.InteractionCreate, opts command
 
 	embed := &discordgo.MessageEmbed{
 		Author: &discordgo.MessageEmbedAuthor{
-			Name:    u.Username + "#" + u.Discriminator,
+			Name:    u.DisplayName(),
 			IconURL: u.AvatarURL("16x16"),
 		},
 		Color: 0xACDDFF,
-		Title: "Information utilisateur",
+		Title: "👤  À propos de " + u.Username,
 	}
 
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
