@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 
 	"TradeBot/handlers"
@@ -15,8 +16,13 @@ func Start(token string) (*discordgo.Session, error) {
 	}
 
 	dg.Identify.Intents = discordgo.IntentsGuildMessages
+	dg.Identify.Intents = discordgo.IntentsGuilds
 
 	dg.AddHandler(handlers.InteractionHandler)
+
+	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		fmt.Println("RAW interaction received")
+	})
 
 	err = dg.Open()
 	if err != nil {

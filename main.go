@@ -22,12 +22,26 @@ var commandsData = []*discordgo.ApplicationCommand{
 	{
 		Name:        "echo",
 		Description: "Say something",
-		Options:     []*discordgo.ApplicationCommandOption{},
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Name:        "message",
+				Description: "Say something",
+				Type:        discordgo.ApplicationCommandOptionString,
+				Required:    true,
+			},
+		},
 	},
 	{
 		Name:        "user_info",
 		Description: "Get user info",
-		Options:     []*discordgo.ApplicationCommandOption{},
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Name:        "user",
+				Description: "User to inspect",
+				Type:        discordgo.ApplicationCommandOptionUser,
+				Required:    true,
+			},
+		},
 	},
 }
 
