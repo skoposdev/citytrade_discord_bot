@@ -4,6 +4,7 @@ import (
 	"TradeBot/commands/flux"
 	"TradeBot/commands/fun"
 	"TradeBot/commands/info"
+	"TradeBot/commands/moderation"
 	"log"
 	"os"
 
@@ -98,6 +99,18 @@ var commandsData = []*discordgo.ApplicationCommand{
 			},
 		},
 	},
+	{
+		Name:        "mute",
+		Description: "Permet de muter un membre du discord",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Name:        "pseudo",
+				Description: "La personne à mute",
+				Type:        discordgo.ApplicationCommandOptionUser,
+				Required:    true,
+			},
+		},
+	},
 }
 
 func main() {
@@ -115,6 +128,7 @@ func main() {
 	commands.Register("rank", commands.Command{Exec: flux.StaffRank})
 	commands.Register("unrank", commands.Command{Exec: flux.StaffUnrank})
 	commands.Register("switch", commands.Command{Exec: flux.RankSwitch})
+	commands.Register("mute", commands.Command{Exec: moderation.Mute})
 
 	_, err = dg.ApplicationCommandBulkOverwrite(app, guild, commandsData)
 	if err != nil {

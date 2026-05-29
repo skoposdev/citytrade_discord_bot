@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 
 	"TradeBot/commands"
 	"TradeBot/utils"
@@ -12,6 +13,11 @@ import (
 func InteractionHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.Type != discordgo.InteractionApplicationCommand {
 		return
+	}
+
+	_, err = dg.ApplicationCommandBulkOverwrite(app, guild, commandsData)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	name := i.ApplicationCommandData().Name
