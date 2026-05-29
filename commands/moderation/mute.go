@@ -13,21 +13,30 @@ const (
 )
 
 func Mute(s *discordgo.Session, i *discordgo.InteractionCreate, opts commands.OptionMap) {
-	u := opts["pseudo"].UserValue(s)
+	guild, _ := s.Guild(i.GuildID)
+
+	p := opts["pseudo"].UserValue(s)
 	// t := opts["target"].UserValue(s)
 
-	a, err := s.GuildMember(i.GuildID, i.Member.User.ID)
+	author, err := s.GuildMember(i.GuildID, i.Member.User.ID)
 	if err != nil {
 		return
 	}
 
-	hasRole := utils.CheckMemberRoles(a, ADMIN_ROLE)
+	target, err := s.GuildMember(i.GuildID, p.ID)
+	if err != nil {
+		return
+	}
 
-	if !hasRole {
+	canMute := utils.CheckRolesPosition(guild, author, target)
+
+	hasRole := utils.CheckMemberRoles(author, ADMIN_ROLE)
+
+	if !hasRole || !canMute {
 		err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "Vous n'avez pas le rôle nécessaire pour effectuer cette action.",
+				Content: "Vous n'avez pas le rôle ou les permissions nécessaires nécessaire pour effectuer cette action.",
 			},
 		})
 		if err != nil {
@@ -38,7 +47,7 @@ func Mute(s *discordgo.Session, i *discordgo.InteractionCreate, opts commands.Op
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: fmt.Sprintf("%s a bien été mute !", u.DisplayName()),
+			Content: fmt.Sprintf("%s a bien été mute !", target.DisplayName()),
 		},
 	})
 	if err != nil {
