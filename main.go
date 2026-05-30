@@ -1,35 +1,20 @@
 package main
 
 import (
+	"TradeBot/commands/flux"
 	"TradeBot/commands/fun"
 	"TradeBot/commands/info"
+	"TradeBot/commands/moderation"
 	"log"
 	"os"
 
 	"TradeBot/bot"
 	"TradeBot/commands"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 var (
 	token = os.Getenv("TOKEN")
-	app   = os.Getenv("APP")
-	guild = os.Getenv("GUILD")
 )
-
-var commandsData = []*discordgo.ApplicationCommand{
-	{
-		Name:        "echo",
-		Description: "Say something",
-		Options:     []*discordgo.ApplicationCommandOption{},
-	},
-	{
-		Name:        "user_info",
-		Description: "Get user info",
-		Options:     []*discordgo.ApplicationCommandOption{},
-	},
-}
 
 func main() {
 	if token == "" {
@@ -43,11 +28,12 @@ func main() {
 
 	commands.Register("echo", commands.Command{Exec: fun.Echo})
 	commands.Register("user_info", commands.Command{Exec: info.UserInfo})
+	commands.Register("rank", commands.Command{Exec: flux.StaffRank})
+	commands.Register("unrank", commands.Command{Exec: flux.StaffUnrank})
+	commands.Register("switch", commands.Command{Exec: flux.RankSwitch})
+	commands.Register("mute", commands.Command{Exec: moderation.Mute})
 
-	_, err = dg.ApplicationCommandBulkOverwrite(app, guild, commandsData)
-	if err != nil {
-		log.Fatal(err)
-	}
+	bot.GuildsHandler(dg)
 
 	select {}
 }
