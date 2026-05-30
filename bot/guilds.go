@@ -11,8 +11,7 @@ import (
 var Guilds = make(map[string]string)
 
 var (
-	token = os.Getenv("TOKEN")
-	app   = os.Getenv("APP")
+	app = os.Getenv("APP")
 )
 
 var commandsData = []*discordgo.ApplicationCommand{
