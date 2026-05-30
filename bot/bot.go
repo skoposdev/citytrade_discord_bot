@@ -30,7 +30,7 @@ func Start(token string) (*discordgo.Session, error) {
 		return nil, err
 	}
 
-	log.Println("🚀 Démarrage du bot" + dg.State.User.DisplayName())
+	log.Println("[🚀 ] Démarrage du bot " + dg.State.User.DisplayName())
 
 	return dg, nil
 }
