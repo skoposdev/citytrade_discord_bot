@@ -108,19 +108,44 @@ var commandsData = []*discordgo.ApplicationCommand{
 }
 
 func GuildsHandler(s *discordgo.Session) {
+
+	GuildCommands := map[string]map[string]bool{
+		"1476574390379614321": {
+			"echo":      true,
+			"user_info": true,
+			"rank":      true,
+			"unrank":    true,
+			"switch":    true,
+			"mute":      true,
+		},
+		"1482392159863836746": {
+			"echo":      true,
+			"user_info": true,
+		},
+	}
+
+	for guildID, cmdRules := range GuildCommands {
+
+		allowedCommands := make([]*discordgo.ApplicationCommand, 0)
+
+		for _, cmd := range commandsData {
+			if cmdRules[cmd.Name] {
+				allowedCommands = append(allowedCommands, cmd)
+			}
+		}
+
+		_, err := s.ApplicationCommandBulkOverwrite(app, guildID, allowedCommands)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("Déploiement sur la guild: %s\n", guildID)
+	}
+
 	for _, guild := range s.State.Guilds {
 		g, err := s.Guild(guild.ID)
 		if err != nil {
 			log.Println("Error getting guild", guild.ID, ":", err)
 		}
 		Guilds[g.ID] = g.Name
-	}
-
-	for guildID, guildName := range Guilds {
-		_, err := s.ApplicationCommandBulkOverwrite(app, guildID, commandsData)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("Déploiement sur la guild: %s\n", guildName)
 	}
 }
